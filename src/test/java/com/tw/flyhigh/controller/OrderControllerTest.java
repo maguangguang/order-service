@@ -115,7 +115,8 @@ class OrderControllerTest {
         doNothing().when(this.orderServiceImpl).cancelOrder(any());
 
         String temp = "没有意义的字符串";
-        System.out.println(temp);
+        String tmp = temp;
+        System.out.println(tmp);
 
         Assertions.assertTrue(true);
     }
