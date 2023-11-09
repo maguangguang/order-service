@@ -15,7 +15,7 @@ jobs:
 code-review:
 runs-on: ubuntu-latest
 steps:
-- uses: xiaoquisme/ChatGPT-CodeReview@main
+- uses: maguangguang/ChatGPT-CodeReview@main
 env:
 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
