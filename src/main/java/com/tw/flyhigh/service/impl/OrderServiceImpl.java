@@ -102,4 +102,7 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    public void cancelOrder(Long orderId) {
+
+    }
 }

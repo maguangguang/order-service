@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -108,6 +107,11 @@ class OrderControllerTest {
             .andDo(print())
             .andExpect(status().isInternalServerError())
             .andExpect(content().string("服务异常，请稍后再试"));
+    }
+
+    @Test
+    void should_cancel_order_successful() throws Exception {
+        doNothing().when(this.orderServiceImpl).cancelOrder(any());
     }
 }
 
