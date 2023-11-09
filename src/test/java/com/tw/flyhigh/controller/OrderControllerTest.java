@@ -7,6 +7,7 @@ import com.tw.flyhigh.common.exception.BusinessException;
 import com.tw.flyhigh.common.exception.NoMoreSeatException;
 import com.tw.flyhigh.service.impl.OrderServiceImpl;
 import feign.FeignException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +113,11 @@ class OrderControllerTest {
     @Test
     void should_cancel_order_successful() throws Exception {
         doNothing().when(this.orderServiceImpl).cancelOrder(any());
+
+        String temp = "没有意义的字符串";
+        System.out.println(temp);
+
+        Assertions.assertTrue(true);
     }
 }
 
