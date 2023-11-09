@@ -1,0 +1,31 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: order-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/order?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF8&serverTimezone=Asia/Shanghai
+    username: 'test'
+    password: 'thoughtworks'
+    hikari:
+      initialization-fail-timeout: 0
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /
+
+third:
+  price-seat-manager:
+    url: http://localhost:8085
+
+mq:
+  exchange:
+    topic:
+      order: order.topic
