@@ -1,0 +1,32 @@
+name: Code Review
+
+permissions: write-all
+
+run-name: Code Review for ${{github.event.head_commit.message}}
+
+on:
+pull_request:
+types: [opened, reopened, synchronize]
+push:
+branches: [ "master" ]
+
+
+jobs:
+code-review:
+runs-on: ubuntu-latest
+steps:
+- uses: xiaoquisme/ChatGPT-CodeReview@main
+env:
+GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+# Optional
+LANGUAGE: Chinese
+top_p: 1
+temperature: 1
+CODE_REVIEW_PROMPT: "Below is the code patch.
+Write a detailed review {answerLanguage} of any issues you can find in the form of a table with a row for each issue and the following columns:
+- Issue type (e.g. bug, style, etc.)
+- Issue importance (e.g. low, medium, high)
+- Issue description
+- Recommended fix
+{patch}"
