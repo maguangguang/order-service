@@ -21,7 +21,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           # Optional
           LANGUAGE: Chinese
-          OPENAI_API_ENDPOINT: https://api.chatanywhere.cn/v1
+          OPENAI_API_ENDPOINT: https://api.chatanywhere.com.cn/v1
           top_p: 1
           temperature: 1
           CODE_REVIEW_PROMPT: "Below is the code patch.
