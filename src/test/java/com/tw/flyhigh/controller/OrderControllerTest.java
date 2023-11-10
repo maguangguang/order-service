@@ -15,8 +15,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -110,15 +112,37 @@ class OrderControllerTest {
             .andExpect(content().string("服务异常，请稍后再试"));
     }
 
+    //AC1
     @Test
-    void should_cancel_order_successful() throws Exception {
-        doNothing().when(this.orderServiceImpl).cancelOrder(any());
+    void should_cancel_order_successfully() throws Exception {
+        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
+                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
+                                          .andExpect(status().isOk())
+                                          .andReturn();
 
-        String temp = "没有意义的字符串";
-        String tmp = temp;
-        System.out.println(tmp);
+        assertEquals("订单已取消", result.getResponse().getContentAsString());
+    }
 
-        Assertions.assertTrue(true);
+    //AC2
+    @Test
+    void should_return_not_found_when_order_not_exists() throws Exception {
+        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
+                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
+                                          .andExpect(status().isNotFound())
+                                          .andReturn();
+
+        assertEquals("订单未找到", result.getResponse().getContentAsString());
+    }
+
+    //AC3
+    @Test
+    void should_return_service_error_when_exception_occurs() throws Exception {
+        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
+                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
+                                          .andExpect(status().isInternalServerError())
+                                          .andReturn();
+
+        assertEquals("服务器错误", result.getResponse().getContentAsString());
     }
 }
 
