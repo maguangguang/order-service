@@ -101,8 +101,4 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderEventList(Order.transferOrderEvent(ticketOrderEntity.getEvents()));
         return order;
     }
-
-    public void cancelOrder(Long orderId) {
-
-    }
 }
