@@ -116,11 +116,11 @@ class OrderControllerTest {
     @Test
     void should_cancel_order_successfully() throws Exception {
         MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
-                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
-                                          .andExpect(status().isOk())
-                                          .andReturn();
-
-        assertEquals("订单已取消", result.getResponse().getContentAsString());
+                                                  .perform(post("/orders/{orderId}/cancellation", "123456"))
+                                                  .andExpect(status().isNotFound())
+                                                  .andReturn();
+        
+        assertEquals("订单未找到", result.getResponse().getContentAsString());
     }
 
     //AC2
@@ -145,4 +145,14 @@ class OrderControllerTest {
         assertEquals("服务器错误", result.getResponse().getContentAsString());
     }
 }
+    //AC2
+    @Test
+    void should_return_not_found_when_order_not_exists() throws Exception {
+        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
+                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
+                                          .andExpect(status().isNotFound())
+                                          .andReturn();
+
+        assertEquals("订单未找到", result.getResponse().getContentAsString());
+    }
 
