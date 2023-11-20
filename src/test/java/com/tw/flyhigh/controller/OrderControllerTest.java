@@ -121,6 +121,29 @@ class OrderControllerTest {
                                                   .andReturn();
         
         assertEquals("订单未找到", result.getResponse().getContentAsString());
+        }
+        
+        //AC2
+        @Test
+        void should_return_not_found_when_order_not_exists() throws Exception {
+        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
+                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
+                                          .andExpect(status().isNotFound())
+                                          .andReturn();
+        
+        assertEquals("订单未找到", result.getResponse().getContentAsString());
+        }
+        
+        //AC3
+        @Test
+        void should_return_service_error_when_exception_occurs() throws Exception {
+        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
+                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
+                                          .andExpect(status().isInternalServerError())
+                                          .andReturn();
+        
+        assertEquals("服务器错误", result.getResponse().getContentAsString());
+        }
     }
 
     //AC2
@@ -154,5 +177,15 @@ class OrderControllerTest {
                                           .andReturn();
 
         assertEquals("订单未找到", result.getResponse().getContentAsString());
+    }
+    //AC3
+    @Test
+    void should_return_service_error_when_exception_occurs() throws Exception {
+        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
+                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
+                                          .andExpect(status().isInternalServerError())
+                                          .andReturn();
+
+        assertEquals("服务器错误", result.getResponse().getContentAsString());
     }
 
