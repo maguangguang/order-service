@@ -16,8 +16,6 @@ flush privileges;
 exec OrderServiceApplication$Main method
 
 ### Swagger UI http://localhost:8082/swagger-ui/index.html
-### Swagger UI http://localhost:8082/swagger-ui/index.html
 
-### Swagger UI http://localhost:8082/swagger-ui/index.html
 ### Swagger UI http://localhost:8082/swagger-ui/index.html
 
