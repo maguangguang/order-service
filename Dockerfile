@@ -1,5 +1,16 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
-VOLUME /tmp
-ADD build/libs/order-service-0.0.1-SNAPSHOT.jar order-service.jar
-EXPOSE 8082
-ENTRYPOINT ["java","-jar","order-service.jar"]
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /app
+
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
+WORKDIR /app
+COPY --from=build /app/out .
+ENTRYPOINT ["dotnet", "OrderService.dll"]
