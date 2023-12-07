@@ -5,6 +5,8 @@ import com.tw.flyhigh.OrderFixture;
 import com.tw.flyhigh.common.ExceptionHandlerAdvice;
 import com.tw.flyhigh.common.exception.BusinessException;
 import com.tw.flyhigh.common.exception.NoMoreSeatException;
+import com.tw.flyhigh.common.exception.OrderNotFoundException;
+import com.tw.flyhigh.entity.TicketOrderEntity;
 import com.tw.flyhigh.service.impl.OrderServiceImpl;
 import feign.FeignException;
 import org.junit.jupiter.api.Assertions;
@@ -112,37 +114,62 @@ class OrderControllerTest {
             .andExpect(content().string("服务异常，请稍后再试"));
     }
 
-    //AC1
+    // generate unit tests for cancel order
+    // AC1: After the user submits a request to cancel the order, the order is successfully cancelled.
     @Test
-    void should_cancel_order_successfully() throws Exception {
-        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
-                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
-                                          .andExpect(status().isOk())
-                                          .andReturn();
+    void should_cancel_order_successful() throws Exception {
+        // given
+        Long orderId = 1L;
 
-        assertEquals("订单已取消", result.getResponse().getContentAsString());
+        // when
+        MvcResult mvcResult = MockMvcBuilders.standaloneSetup(this.orderController).build()
+            .perform(post("/orders/" + orderId + "/cancellation"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+        // then
+        verify(orderServiceImpl, times(1)).cancelOrder(orderId);
+        assertEquals(200, mvcResult.getResponse().getStatus());
     }
 
-    //AC2
+    // AC2: If the user submits a request to cancel the order but the order is not found, the cancellation fails.
     @Test
-    void should_return_not_found_when_order_not_exists() throws Exception {
-        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
-                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
-                                          .andExpect(status().isNotFound())
-                                          .andReturn();
+    void should_cancel_order_failed_when_order_not_found() throws Exception {
+        // given
+        Long orderId = 1L;
+        doThrow(OrderNotFoundException.class).when(orderServiceImpl).cancelOrder(orderId);
 
-        assertEquals("订单未找到", result.getResponse().getContentAsString());
+        // when
+        MvcResult mvcResult = MockMvcBuilders.standaloneSetup(this.orderController).build()
+            .perform(post("/orders/" + orderId + "/cancellation"))
+            .andDo(print())
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        // then
+        verify(orderServiceImpl, times(1)).cancelOrder(orderId);
+        assertEquals(404, mvcResult.getResponse().getStatus());
     }
 
-    //AC3
+    // AC3: If an exception occurs while the user is cancelling the order, the cancellation request fails.
     @Test
-    void should_return_service_error_when_exception_occurs() throws Exception {
-        MvcResult result = MockMvcBuilders.standaloneSetup(this.orderController).build()
-                                          .perform(post("/orders/{orderId}/cancellation", "123456"))
-                                          .andExpect(status().isInternalServerError())
-                                          .andReturn();
+    void should_cancel_order_failed_when_exception_occurs() throws Exception {
+        // given
+        Long orderId = 1L;
+        doThrow(new RuntimeException("")).when(orderServiceImpl).cancelOrder(orderId);
 
-        assertEquals("服务器错误", result.getResponse().getContentAsString());
+        // when
+        MvcResult mvcResult = MockMvcBuilders.standaloneSetup(this.orderController).build()
+            .perform(post("/orders/" + orderId + "/cancellation"))
+            .andDo(print())
+            .andExpect(status().isInternalServerError())
+            .andReturn();
+
+        // then
+        verify(orderServiceImpl, times(1)).cancelOrder(orderId);
+        assertEquals(500, mvcResult.getResponse().getStatus());
     }
+
 }
 

@@ -17,7 +17,9 @@ public enum ErrorCode {
 
     ORDER_NOT_FOUND("10006"),
 
-    ORDER_RELEASE_SEAT_FAILED("10007");
+    ORDER_RELEASE_SEAT_FAILED("10007"),
+
+    ORDER_ALREADY_CANCELLED("10008");
 
     private final String value;
 

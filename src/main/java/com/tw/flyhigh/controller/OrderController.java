@@ -1,5 +1,6 @@
 package com.tw.flyhigh.controller;
 
+import com.tw.flyhigh.common.exception.OrderNotFoundException;
 import com.tw.flyhigh.dto.CreateOrderDto;
 import com.tw.flyhigh.dto.Order;
 import com.tw.flyhigh.service.impl.OrderServiceImpl;
@@ -36,5 +37,18 @@ public class OrderController {
     @GetMapping
     public List<Order> getOrders(Long userId) {
         return orderServiceImpl.getOrders(userId);
+    }
+
+
+    @PostMapping("/{orderId}/cancellation")
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long orderId) {
+        try {
+            orderServiceImpl.cancelOrder(orderId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (OrderNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
